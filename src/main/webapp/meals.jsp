@@ -11,7 +11,7 @@
 <hr>
 <h2>Meals</h2>
 <div>
-    <a href="#">Add meal</a>
+    <a href="meals?action=add">Add meal</a>
 </div>
 <br>
 <div>
@@ -26,15 +26,15 @@
         </tr>
         </thead>
         <tbody>
-        <jsp:useBean id="meals" scope="request" type="java.util.List"/>
+<%--        <jsp:useBean id="meals" scope="request" type="java.util.List"/>--%>
         <c:forEach items="${meals}" var="meal">
             <jsp:useBean id="meal" type="ru.javawebinar.topjava.model.MealTo"/>
             <tr style="color:${meal.excess ? "red":"green"}">
                 <td>${f:formatLocalDateTime(meal.dateTime, 'dd.MM.yyyy HH:mm')}</td>
                 <td>${meal.description}</td>
                 <td>${meal.calories}</td>
-                <td><a href="meals?action=update">Update</a></td>
-                <td><a href="meals?action=delete">Delete</a></td>
+                <td><a href="meals?action=update&id=${meal.id}">Update</a></td>
+                <td><a href="meals?action=delete&id=${meal.id}">Delete</a></td>
             </tr>
         </c:forEach>
         </tbody>
