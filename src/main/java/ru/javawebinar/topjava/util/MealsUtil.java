@@ -9,6 +9,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class MealsUtil {
+    public static final int CALORIES_PER_DAY = 2000;
     public static List<MealTo> filteredByStreams(Collection<Meal> meals, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
         Map<LocalDate, Integer> caloriesSumByDate = meals.stream()
                 .collect(
@@ -26,7 +27,7 @@ public class MealsUtil {
         return new MealTo(meal.getId(), meal.getDateTime(), meal.getDescription(), meal.getCalories(), excess);
     }
 
-    public static List<MealTo> filteredMealTo(Collection<Meal> meal, int caloriesPerDay) {
-        return filteredByStreams(meal, LocalTime.MIN, LocalTime.MAX, caloriesPerDay);
+    public static List<MealTo> filteredMealsTo(Collection<Meal> meals, int caloriesPerDay) {
+        return filteredByStreams(meals, LocalTime.MIN, LocalTime.MAX, caloriesPerDay);
     }
 }
