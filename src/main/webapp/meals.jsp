@@ -1,6 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@taglib uri="http://example.com/functions" prefix="f" %>
+<%@ page contentType="text/html;charset=UTF-8"%>
+<%@ taglib uri="http://topjava.javawebinar.ru/functions" prefix="f" %>
 
 <html lang="ru">
 <head>
@@ -26,11 +26,11 @@
         </tr>
         </thead>
         <tbody>
-<%--        <jsp:useBean id="meals" scope="request" type="java.util.List"/>--%>
+        <jsp:useBean id="meals" scope="request" type="java.util.List"/>
         <c:forEach items="${meals}" var="meal">
             <jsp:useBean id="meal" type="ru.javawebinar.topjava.model.MealTo"/>
             <tr style="color:${meal.excess ? "red":"green"}">
-                <td>${f:formatLocalDateTime(meal.dateTime, 'dd.MM.yyyy HH:mm')}</td>
+                <td>${f:formatLocalDateTime(meal.dateTime)}</td>
                 <td>${meal.description}</td>
                 <td>${meal.calories}</td>
                 <td><a href="meals?action=update&id=${meal.id}">Update</a></td>

@@ -10,7 +10,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class InMemoryMealStorage implements MealStorage {
     private final Map<Integer, Meal> storage = new ConcurrentHashMap<>();
-    private final AtomicInteger counter = new AtomicInteger();
+    private final AtomicInteger counter = new AtomicInteger(0);
 
     {
         save(new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 10, 0), "Завтрак", 500));
@@ -24,13 +24,12 @@ public class InMemoryMealStorage implements MealStorage {
 
     @Override
     public Meal save(Meal meal) {
-        if (meal.getId() == null) {
+        if (meal.isNew()){
             meal.setId(counter.incrementAndGet());
             storage.put(meal.getId(), meal);
-        } else if (storage.containsKey(meal.getId())) {
-            storage.replace(meal.getId(), meal);
-        } else storage.put(counter.incrementAndGet(), meal);
-        return storage.get(meal.getId());
+            return meal;
+        }
+        return storage.computeIfPresent(meal.getId(), (id, oldMeal)-> meal);
     }
 
     @Override
