@@ -19,7 +19,7 @@ import java.util.Objects;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class MealServlet extends HttpServlet {
-    private static final Logger log = getLogger(ru.javawebinar.topjava.web.MealServlet.class);
+    private static final Logger log = getLogger(MealServlet.class);
     private MealStorage mealStorage;
 
     @Override
@@ -31,7 +31,6 @@ public class MealServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
-        final int caloriesPerDay = 2000;
         final Meal meal;
 
         switch (action == null ? "null" : action) {
@@ -42,20 +41,20 @@ public class MealServlet extends HttpServlet {
                 request.getRequestDispatcher("editMeal.jsp").forward(request, response);
                 break;
             case "update":
-                log.info("Update meal with id=" + getId(request));
+                log.info("Update meal with id={}", getId(request));
                 meal = mealStorage.get(getId(request));
                 request.setAttribute("meal", meal);
                 request.getRequestDispatcher("editMeal.jsp").forward(request, response);
                 break;
             case "delete":
-                log.info("Delete meal with id=" + getId(request));
+                log.info("Delete meal with id={}", getId(request));
                 mealStorage.delete(getId(request));
                 response.sendRedirect("meals");
                 break;
             case "null":
             default:
                 log.info("Get all meals");
-                request.setAttribute("meals", MealsUtil.filteredMealTo(mealStorage.getAll(), caloriesPerDay));
+                request.setAttribute("meals", MealsUtil.filteredMealsTo(mealStorage.getAll(), MealsUtil.CALORIES_PER_DAY));
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
                 break;
         }
@@ -64,7 +63,7 @@ public class MealServlet extends HttpServlet {
     private int getId(HttpServletRequest request) {
         String paramId = Objects.requireNonNull(request.getParameter("id"));
         return Integer.parseInt(paramId);
-}
+    }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
