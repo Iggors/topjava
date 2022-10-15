@@ -75,6 +75,7 @@ public class MealServlet extends HttpServlet {
                 request.getParameter("description"),
                 Integer.parseInt(request.getParameter("calories"))
         );
+        log.info(meal.isNew() ? "Creat new meal with id={}" : "Update meal with id={}", meal.getId());
         mealStorage.save(meal);
         response.sendRedirect("meals");
     }
