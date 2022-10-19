@@ -9,7 +9,7 @@ import ru.javawebinar.topjava.web.user.AdminRestController;
 
 import java.util.Arrays;
 
-import static java.lang.System.*;
+import static java.lang.System.out;
 
 public class SpringMain {
     public static void main(String[] args) {
@@ -22,7 +22,6 @@ public class SpringMain {
             MealRestController mealRestController = appCtx.getBean(MealRestController.class);
             mealRestController.getAll().stream().forEach(System.out::println);
             mealRestController.get(1);
-            mealRestController.get(2);
         }
     }
 }

@@ -7,10 +7,19 @@ import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
 import ru.javawebinar.topjava.util.MealsUtil;
 
-import java.util.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
+
+import static ru.javawebinar.topjava.web.SecurityUtil.ADMIN_ID;
+import static ru.javawebinar.topjava.web.SecurityUtil.USER_ID;
 
 @Repository
 public class InMemoryMealRepository implements MealRepository {
@@ -19,7 +28,11 @@ public class InMemoryMealRepository implements MealRepository {
     private final AtomicInteger counter = new AtomicInteger(0);
 
     {
-        MealsUtil.meals.forEach(meal -> save(meal, 1));
+        MealsUtil.meals.forEach(meal -> save(meal, USER_ID));
+        save(new Meal(LocalDateTime.of(2022, Month.OCTOBER, 19, 9, 0), "Завтрак администратора", 600), ADMIN_ID);
+        save(new Meal(LocalDateTime.of(2022, Month.OCTOBER, 19, 14, 0), "Обед администратора", 900), ADMIN_ID);
+        save(new Meal(LocalDateTime.of(2022, Month.OCTOBER, 19, 21, 0), "Ужин администратора", 1000), ADMIN_ID);
+        save(new Meal(LocalDateTime.of(2022, Month.OCTOBER, 20, 21, 0), "Завтрак администратора", 500), ADMIN_ID);
     }
 
     @Override
@@ -51,10 +64,21 @@ public class InMemoryMealRepository implements MealRepository {
     }
 
     @Override
-    public Collection<Meal> getAll(int userId) {
-        return repository.get(userId).values().stream()
+    public List<Meal> getAll(int userId) {
+        log.info("Geting all meal, user id={}", userId);
+        Map<Integer, Meal> meals = repository.get(userId);
+        return meals == null ? Collections.emptyList() : meals.values().stream()
                 .sorted(Comparator.comparing(Meal::getDateTime).reversed())
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<Meal> getAllBetweenDate(LocalDate startDate, LocalDate endDate, int userId) {
+        Map<Integer, Meal> mealsBetweenDate = repository.get(userId);
+        return mealsBetweenDate == null ? Collections.emptyList() : mealsBetweenDate.values().stream()
+                .filter(m -> m.getDate().isAfter(startDate) && m.getDate().isBefore(endDate))
+                .collect(Collectors.toList());
+    }
 }
+
 
