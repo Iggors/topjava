@@ -45,6 +45,6 @@ public class MealService {
 
     public List<MealTo> getAllBetweenDates(LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime, int userId) {
         final List<Meal> mealsBetweenDate = repository.getAllBetweenDate(getStartDateOrMin(startDate), getEndDateOrMax(endDate), userId);
-        return getFilteredTos(mealsBetweenDate, DEFAULT_CALORIES_PER_DAY, startTime, endTime);
+        return getFilteredTos(mealsBetweenDate, SecurityUtil.authUserCaloriesPerDay(), startTime, endTime);
     }
 }
