@@ -24,7 +24,7 @@ import static ru.javawebinar.topjava.util.DateTimeUtil.parseLocalTime;
 public class MealServlet extends HttpServlet {
     private static final Logger log = LoggerFactory.getLogger(MealServlet.class);
 
-    ConfigurableApplicationContext ctx;
+    private ConfigurableApplicationContext ctx;
     private MealRestController controller;
 
     @Override
