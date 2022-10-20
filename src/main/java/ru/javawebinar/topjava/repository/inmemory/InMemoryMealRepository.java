@@ -5,9 +5,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
+import ru.javawebinar.topjava.util.DateTimeUtil;
 import ru.javawebinar.topjava.util.MealsUtil;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.Collections;
@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static ru.javawebinar.topjava.web.SecurityUtil.ADMIN_ID;
@@ -66,17 +67,19 @@ public class InMemoryMealRepository implements MealRepository {
     @Override
     public List<Meal> getAll(int userId) {
         log.info("Geting all meal, user id={}", userId);
-        Map<Integer, Meal> meals = repository.get(userId);
-        return meals == null ? Collections.emptyList() : meals.values().stream()
-                .sorted(Comparator.comparing(Meal::getDateTime).reversed())
-                .collect(Collectors.toList());
+        return filterByPredicate(userId, meal -> true);
     }
 
     @Override
-    public List<Meal> getAllBetweenDate(LocalDate startDate, LocalDate endDate, int userId) {
-        Map<Integer, Meal> mealsBetweenDate = repository.get(userId);
-        return mealsBetweenDate == null ? Collections.emptyList() : mealsBetweenDate.values().stream()
-                .filter(m -> m.getDate().isAfter(startDate) && m.getDate().isBefore(endDate))
+    public List<Meal> getAllBetweenDate(LocalDateTime startDate, LocalDateTime endDate, int userId) {
+        return filterByPredicate(userId, meal -> DateTimeUtil.isBetweenHalfOpen(meal.getDateTime(), startDate, endDate));
+    }
+
+    private List<Meal> filterByPredicate(int userId, Predicate<Meal> filter) {
+        Map<Integer, Meal> meals = repository.get(userId);
+        return meals == null ? Collections.emptyList() : meals.values().stream()
+                .filter(filter)
+                .sorted(Comparator.comparing(Meal::getDateTime).reversed())
                 .collect(Collectors.toList());
     }
 }
