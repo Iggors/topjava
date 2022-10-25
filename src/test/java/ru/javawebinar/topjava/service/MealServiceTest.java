@@ -9,10 +9,10 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit4.SpringRunner;
+import ru.javawebinar.topjava.MealTestData;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.Assert.assertThrows;
@@ -39,8 +39,8 @@ public class MealServiceTest {
 
     @Test
     public void get() {
-        Meal mealUser = service.get(USER_MEAL1_ID, USER_ID);
-        assertMatch(mealUser, userMeal1);
+        Meal userMeal = service.get(USER_MEAL1_ID, USER_ID);
+        assertMatch(userMeal, userMeal1);
     }
 
     @Test
@@ -56,9 +56,9 @@ public class MealServiceTest {
     @Test
     public void getAll() {
         List<Meal> userMeals = service.getAll(USER_ID);
-        assertMatch(userMeals, userMealsTestData);
+        assertMatch(userMeals, MealTestData.userMeals);
         List<Meal> adminMeals = service.getAll(ADMIN_ID);
-        assertMatch(adminMeals, adminMealsTestData);
+        assertMatch(adminMeals, MealTestData.adminMeals);
     }
 
     @Test
@@ -68,14 +68,13 @@ public class MealServiceTest {
 
     @Test
     public void getBetweenWithNullDates() {
-        assertMatch(service.getBetweenInclusive(null, null, USER_ID), userMealsTestData);
+        assertMatch(service.getBetweenInclusive(null, null, USER_ID), userMeals);
     }
 
     @Test
     public void delete() {
         service.delete(USER_MEAL1_ID, USER_ID);
         assertThrows(NotFoundException.class, () -> service.get(USER_MEAL1_ID, USER_ID));
-
     }
 
     @Test
@@ -87,7 +86,6 @@ public class MealServiceTest {
     public void deleteNotOwn() {
         assertThrows(NotFoundException.class, () -> service.delete(USER_MEAL1_ID, ADMIN_ID));
     }
-
 
     @Test
     public void update() {
@@ -115,8 +113,6 @@ public class MealServiceTest {
     @Test
     public void duplicateDateTimeCreate() {
         assertThrows(DataAccessException.class, () ->
-                service.create(
-                        new Meal(LocalDateTime.of(2020, 1, 31, 0, 0), "Duplicate", 100),
-                        USER_ID));
+                service.create(new Meal(userMeal1.getDateTime(), "Duplicate", 100), USER_ID));
     }
 }

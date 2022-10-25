@@ -28,8 +28,8 @@ public class MealTestData {
     public static final Meal adminMeal1 = new Meal(START_SEQ + 10, LocalDateTime.of(2015, 6, 1, 10, 0), "Админ завтрак", 300);
     public static final Meal adminMeal2 = new Meal(START_SEQ + 11, LocalDateTime.of(2015, 6, 1, 14, 0), "Админ ланч", 510);
     public static final Meal adminMeal3 = new Meal(START_SEQ + 12, LocalDateTime.of(2015, 6, 1, 21, 0), "Админ ужин", 1500);
-    public static final List<Meal> userMealsTestData = Arrays.asList(userMeal7, userMeal6, userMeal5, userMeal4, userMeal3, userMeal2, userMeal1);
-    public static final List<Meal> adminMealsTestData = Arrays.asList(adminMeal3, adminMeal2, adminMeal1);
+    public static final List<Meal> userMeals = Arrays.asList(userMeal7, userMeal6, userMeal5, userMeal4, userMeal3, userMeal2, userMeal1);
+    public static final List<Meal> adminMeals = Arrays.asList(adminMeal3, adminMeal2, adminMeal1);
     public static final List<Meal> userMealsWithDateInterval = Arrays.asList(userMeal7, userMeal6, userMeal5, userMeal4);
 
     public static void assertMatch(Meal actual, Meal expected) {
