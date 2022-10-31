@@ -5,6 +5,7 @@ import org.hibernate.validator.constraints.Range;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -18,31 +19,26 @@ import java.time.LocalTime;
                 query = "SELECT m FROM Meal m WHERE m.user.id=:user_id AND m.dateTime>=:start AND m.dateTime<:end ORDER BY m.dateTime DESC"),
         @NamedQuery(
                 name = Meal.DELETE,
-                query = "DELETE FROM Meal m WHERE m.id=:id AND m.user.id=:user_id"),
-        @NamedQuery(
-                name = Meal.UPDATE,
-                query = "UPDATE Meal m SET m.description=:description, m.calories=:calories, m.dateTime=:dateTime WHERE m.id=:id AND m.user.id=:userId")
+                query = "DELETE FROM Meal m WHERE m.id=:id AND m.user.id=:user_id")
 })
-
 @Entity
 @Table(name = "meals", uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "date_time"}, name = "meals_unique_user_datetime_idx")})
 public class Meal extends AbstractBaseEntity {
     public static final String GET_ALL_SORTED = "Meal.getAllSorted";
     public static final String DELETE = "Meal.delete";
     public static final String GET_ALL_SORTED_BETWEEN = "Meal.getAllSortedBetween";
-    public static final String UPDATE = "Meal.update";
 
     @Column(name = "date_time", nullable = false)
     @NotNull
     private LocalDateTime dateTime;
 
     @Column(name = "description", nullable = false)
+    @Size(min = 2, max=120)
     @NotBlank
     private String description;
 
     @Column(name = "calories", nullable = false)
     @Range(min = 10, max = 10000)
-    @NotNull
     private int calories;
 
     @ManyToOne(fetch = FetchType.LAZY)
