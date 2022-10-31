@@ -33,7 +33,7 @@ import static ru.javawebinar.topjava.UserTestData.USER_ID;
 @RunWith(SpringRunner.class)
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
 public class MealServiceTest {
-    public static final Logger log = LoggerFactory.getLogger(MealServiceTest.class);
+    private static final Logger log = LoggerFactory.getLogger(MealServiceTest.class);
     public static final StringBuilder testSummary = new StringBuilder();
 
     @Autowired
@@ -45,19 +45,17 @@ public class MealServiceTest {
         protected void finished(long nanos, Description description) {
             printTestSummary(nanos, description);
         }
+
+        private void printTestSummary(long nanos, Description description) {
+            String result = String.format("%-30s %d", description.getMethodName(), TimeUnit.NANOSECONDS.toMillis(nanos));
+            testSummary.append(result).append("ms\n");
+            log.info(result + "ms");
+        }
     };
 
     @AfterClass
     public static void logTestReport() {
         log.info("\nTESTS RESULTS\n" + testSummary);
-    }
-
-    private void printTestSummary(long nanos, Description description) {
-        final String methodName = description.getMethodName();
-        final long time = TimeUnit.NANOSECONDS.toMillis(nanos);
-        testSummary.append(methodName).append(": ").append(time).append("ms\n");
-        log.info("Test name: " + methodName);
-        log.info(("Time passed: " + time + "ms"));
     }
 
     @Test
