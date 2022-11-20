@@ -36,6 +36,6 @@ public class RootController {
         int userId = Integer.parseInt(request.getParameter("userId"));
         log.info("setUser {}", userId);
         SecurityUtil.setAuthUserId(userId);
-        return "redirect:meals";
+        return "redirect:/meals";
     }
 }

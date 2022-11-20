@@ -50,11 +50,11 @@ public class JspMealController extends AbstractMealController {
         LocalTime startTime = parseLocalTime(request.getParameter("startTime"));
         LocalTime endTime = parseLocalTime(request.getParameter("endTime"));
         model.addAttribute("meals", super.getBetween(startDate, startTime, endDate, endTime));
-        log.info("Filtering mills");
+        log.info("Filtering meals");
         return "meals";
     }
 
-    @PostMapping({"/create", "/update"})
+    @PostMapping
     public String postCreateOrUpdate(HttpServletRequest request) {
         Meal meal = new Meal(
                 LocalDateTime.parse(request.getParameter("dateTime")),
